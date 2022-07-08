@@ -228,3 +228,159 @@ INSERT INTO dependents(dependent_id,first_name,last_name,relationship,employee_i
 /* Simple test */
 
 select * from employees;
+
+/* --------------------------------- part 3 exercises --------------------------- */
+
+/* Inner join */
+
+select
+	employees.first_name,
+    employees.last_name,
+    employees.department_id,
+    departments.department_id,
+    departments.department_name
+from 
+	employees inner join departments
+    on employees.department_id = departments.department_id
+where
+	employees.department_id in (1, 2, 3);
+    
+/* Left Join */
+
+select 
+	c.country_name,
+    c.country_id,
+    l.country_id,
+    l.street_address,
+    l.city
+from
+	countries c left join locations l 
+    on l.country_id = c.country_id
+where
+	c.country_id in ('UK', 'US', 'CN');
+
+/* Right Join */
+
+select 
+	c.country_name,
+    c.country_id,
+    l.country_id,
+    l.street_address,
+    l.city
+from
+	countries c right join locations l 
+    on l.country_id = c.country_id
+where
+	c.country_id in ('UK', 'US', 'CN');
+    
+/* outer join */
+
+select
+	employees.first_name,
+    employees.last_name,
+    employees.department_id,
+    departments.department_id,
+    departments.department_name
+from 
+	employees left outer join departments
+    on employees.department_id = departments.department_id;
+    
+select
+	employees.first_name,
+    employees.last_name,
+    employees.department_id,
+    departments.department_id,
+    departments.department_name
+from 
+	employees right outer join departments
+    on employees.department_id = departments.department_id;
+    
+    
+/* grouping after joining */
+
+select 
+	employees.department_id,
+    departments.department_name,
+    count(employee_id) headcount
+from 
+	employees inner join departments
+    on employees.department_id = departments.department_id
+group by
+	department_id;
+    
+    
+    
+/* ------------------------- altering a table --------------------------------- */
+
+create table courses (
+	student_id int,
+	name varchar(20),
+    course_id int,
+    taken date,
+    primary key (student_id)
+);
+
+ALTER TABLE courses ADD credit_hours INT NOT NULL;
+
+ALTER TABLE courses 
+ADD fee NUMERIC (10, 2) AFTER course_id,
+ADD max_limit INT AFTER course_id;
+
+select * from courses;
+
+ALTER TABLE courses 
+MODIFY fee NUMERIC (12, 2) NOT NULL;
+
+ALTER TABLE courses DROP COLUMN fee;
+
+select * from courses;
+
+/* ------------------------------------ Stored procedures ------------------------------- */
+/* notice delimeters */
+
+delimiter $$
+create procedure getdata()
+begin
+	select * from employees;
+end$$
+delimiter ;
+
+call getdata();
+
+
+/* with input parameters */
+
+delimiter $$
+create procedure getdata2(in empid int)
+begin
+	select * from employees where employee_id = empid;
+end$$
+delimiter ;
+
+call getdata2(105);
+
+/* with output parameters */
+
+delimiter $$
+create procedure getaveragesalary(out avgsal decimal)
+begin
+	select avg(salary) into avgsal from employees;
+end$$
+delimiter ;
+
+call getaveragesalary(@averagesalary);
+select @averagesalary;
+
+/* with inout parameters */
+
+delimiter $$
+create procedure getinfo(inout num decimal)
+begin
+	select salary into num from employees where employee_id = num;
+    /* alternatively set num = whatever can be used to output as well */
+end$$
+delimiter ;
+
+set @var = 105;
+call getaveragesalary(@var);
+select @var;
