@@ -32,3 +32,16 @@ hadoop fs -ls mrdata/output2
 hadoop fs -cat mrdata/output2/*0
 
 ------------- step 4
+
+
+----------------------------- word count mapreduce submission
+
+step 1: put war_and_peace.txt to a hdfs folder
+step 2: JAR WordCount.jar
+        Driver WordCount.java
+        Input hdfsfolder/war_and_peace.txt
+        Output hdfsfolder/output
+        Using the above information build the YARN command and submit the mapreduce task:
+        yarn jar WordCount.jar WordCount hdfsfolder/war_and_peace.txt hdfsfolder/output
+step 3: hadoop fs -cat hdfsfolder/output/*
+
