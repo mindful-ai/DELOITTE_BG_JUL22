@@ -20,3 +20,7 @@ drop table nysedividends;
 
 The above command drops the table. So we would lose the initial input file as it was moved from its locaiton to Hive Warehouse location. 
 This is one of the characteristics of Managed Tables.
+
+---------------------------------------------------------- external table
+
+create external table NYSEdividends (divexchange String, divstock_symbol String, divstock_date String, dividends double) row format delimited fields terminated by "\t" lines terminated by "\n" stored as textfile location '/user/<your-login-id>/nysediv_ext';
