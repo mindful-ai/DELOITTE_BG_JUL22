@@ -1,1 +1,22 @@
 create table NYSEdaily (stexchange String,stock_symbol String,stock_date String,stock_price_open double, stock_price_high double, stock_price_low double, stock_price_close double, stock_volume double, stock_price_adj_close double) row format delimited fields terminated by "\t" lines terminated by "\n";
+
+
+
+select * from NYSEdividends limit 20;
+
+select * from NYSEdividends where dividends>=1 limit 20;
+
+select divstock_symbol, count(divstock_symbol) as divcount from NYSEdividends group by divstock_symbol;
+
+select divstock_symbol, count(divstock_symbol) as divcount from NYSEdividends group by divstock_symbol having divcount>10;
+
+select divstock_symbol, count(divstock_symbol) as divcount from NYSEdividends where dividends>=0.5 group by divstock_symbol having divcount>10;
+
+select a.stock_symbol, a.stock_price_close from nysedaily a join nysedividends b on a.stock_symbol=b.divstock_symbol AND a.stock_date=b.divstock_date limit 10;
+
+select a.stock_symbol, a.stock_price_close, b.dividends, b.divstock_date from nysedaily a join nysedividends b on a.stock_symbol=b.divstock_symbol AND a.stock_date=b.divstock_date where a.stock_price_close>=20;
+
+drop table nysedividends;
+
+The above command drops the table. So we would lose the initial input file as it was moved from its locaiton to Hive Warehouse location. 
+This is one of the characteristics of Managed Tables.
